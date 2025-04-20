@@ -1,0 +1,101 @@
+import math
+
+# Función para validar la condición
+def validar_grupo(grupo):
+    s1 = grupo[0] + grupo[1]
+    s2 = grupo[2] + grupo[3]
+    s3 = grupo[4] + grupo[5]
+    return s1 == (2 * s2) - s3
+
+# Resolución iterativa del exponente
+def calcular_exponente_iterativo(base, resultado):
+    if base <= 0 or resultado <= 0:
+        return None
+    x = 0
+    while base ** x < resultado:
+        x += 1
+    return x if base ** x == resultado else None
+
+# Ordenamiento tipo bubble sort
+def ordenar_lista(lista):
+    n = len(lista)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if lista[j] > lista[j + 1]:
+                lista[j], lista[j + 1] = lista[j + 1], lista[j]
+    return lista
+
+# Búsqueda binaria
+def busqueda_binaria(lista, objetivo):
+    izquierda = 0
+    derecha = len(lista) - 1
+    while izquierda <= derecha:
+        medio = (izquierda + derecha) // 2
+        if lista[medio] == objetivo:
+            return medio
+        elif lista[medio] < objetivo:
+            izquierda = medio + 1
+        else:
+            derecha = medio - 1
+    return -1
+
+# Función principal
+def main():
+    resultados_validos = []
+    casos_validos = 0
+    casos_invalidos = 0
+
+    while True:
+        entrada = input("🔢 Ingrese 6 números separados por espacio (o escriba 'fin'): ")
+        if entrada.lower() == 'fin':
+            break
+
+        elementos = entrada.strip().split()
+
+        if len(elementos) != 6:
+            print(" Error: Debes ingresar exactamente 6 números.")
+            continue
+
+        try:
+            grupo = [int(num) for num in elementos]
+        except ValueError:
+            print("  Error: Asegúrate de ingresar solo números enteros.")
+            continue
+
+        if validar_grupo(grupo):
+            casos_validos += 1
+            base = grupo[0]
+            resultado = grupo[1]
+
+            x = calcular_exponente_iterativo(base, resultado)
+            if x is not None:
+                print(f"  Condición válida → {base}^{x} = {resultado}")
+                resultados_validos.append(x)
+            else:
+                print("  Condición válida, pero no se encontró un exponente entero exacto.")
+        else:
+            casos_invalidos += 1
+            print("  Condición inválida")
+
+    print("\n  RESULTADOS:")
+    print(f"✔ Casos válidos: {casos_validos}")
+    print(f"✘ Casos inválidos: {casos_invalidos}")
+
+    if resultados_validos:
+        resultados_ordenados = ordenar_lista(resultados_validos.copy())
+        print(f" Resultados válidos ordenados: {resultados_ordenados}")
+
+        try:
+            valor = int(input("🔍 Ingrese un valor para buscar en los resultados: "))
+            posicion = busqueda_binaria(resultados_ordenados, valor)
+            if posicion != -1:
+                print(f" Valor encontrado en la posición {posicion + 1} (índice {posicion})")
+            else:
+                print(" Valor no encontrado en la lista.")
+        except ValueError:
+            print("Entrada inválida. Debes ingresar un número entero.")
+    else:
+        print(" No hubo resultados válidos para mostrar.")
+
+if __name__ == "__main__":
+    main()
